@@ -1,0 +1,111 @@
+<html charset="UTF-8">
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-database.js"></script>
+  </head>
+  
+  <p>Temperature</p>
+  <div id="tester" style="width:90%;height:300px;"></div>
+  <p>Humidity</p>
+  <div id="tester2" style="width:90%;height:300px;"></div>
+  <p>Pressure</p>
+  <div id="tester3" style="width:90%;height:300px;"></div>
+  <p>Luminosity</p>
+  <div id="tester4" style="width:90%;height:300px;"></div>
+  <script>
+    // TODO: Replace the following with your app's Firebase project configuration
+    // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
+    var firebaseConfig = {
+    apiKey: "AIzaSyCDwDiA1zHsmxP9RKUuiTJ3XH1ZmKGRlyk",
+    authDomain: "energy-lab-1.firebaseapp.com",
+    databaseURL: "https://energy-lab-1-default-rtdb.firebaseio.com",
+    projectId: "energy-lab-1",
+    storageBucket: "energy-lab-1.appspot.com",
+    messagingSenderId: "950131917604",
+    appId: "1:950131917604:web:bab8a5bc61edfe6b8fa9b1",
+    measurementId: "G-FH3X3WS0DG"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+  var database = firebase.database();
+  var starCountRef = firebase.database().ref('test/');
+  starCountRef.on('value', (snapshot) => {
+    const data = snapshot.val();
+    // console.log(data);
+
+    let xl = []
+    let yl = []
+    let yc = []
+    let yz = []
+    let yw = []
+    for (const [key, value] of Object.entries(data)) {
+      // console.log(`${key}: ${value['temp']}`);
+      xl.push(new Date(key * 1000));
+      yl.push(value['temp']);
+      yc.push(value['hum']);
+      yz.push(value['bar']);
+      yw.push(value['lux']);
+    }
+    console.log(xl);
+    TESTER = document.getElementById('tester');
+    TESTER2 = document.getElementById('tester2');
+    TESTER3 = document.getElementById('tester3');
+    TESTER4 = document.getElementById('tester4');
+
+    var layout = {
+        title: 'Time series with range slider and selectors',
+        xaxis: {
+            rangeslider: {}
+        },
+        margin: { t: 0 } 
+    };
+
+    Plotly.newPlot(TESTER, [{
+    x: xl,
+    y: yl,
+    line: {
+      color: 'rgb(142, 202, 230)',
+      width: 1
+    } }], layout, {displaylogo: false, showSendToCloud: false});
+
+    Plotly.newPlot( TESTER2, [{
+    x: xl,
+    y: yc,
+    line: {
+      color: 'rgb(33, 158, 188)',
+      width: 1
+    } }], layout, {displaylogo: false, showSendToCloud: false} );
+
+    Plotly.newPlot( TESTER3, [{
+    x: xl,
+    y: yz,
+    line: {
+      color: 'rgb(2, 48, 71)',
+      width: 1
+    } }], layout, {displaylogo: false, showSendToCloud: false}  );
+
+    Plotly.newPlot( TESTER4, [{
+    x: xl,
+    y: yw,
+    line: {
+      color: 'rgb(255, 183, 3)',
+      width: 1
+    } }], layout, {displaylogo: false, showSendToCloud: false} );
+});
+  </script>
+  
+  <script>
+    // TESTER = document.getElementById('tester');
+    // Plotly.newPlot( TESTER, [{
+    // x: [1, 2, 3, 4, 5],
+    // y: [1, 2, 4, 8, 16] }], {
+    // margin: { t: 0 } } );
+  </script>
+</html>
