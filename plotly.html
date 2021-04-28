@@ -7,16 +7,44 @@
     <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-database.js"></script>
+    <style>
+      * {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+    </style>
   </head>
   
-  <p>Temperature</p>
-  <div id="tester" style="width:90%;height:300px;"></div>
-  <p>Humidity</p>
-  <div id="tester2" style="width:90%;height:300px;"></div>
-  <p>Pressure</p>
-  <div id="tester3" style="width:90%;height:300px;"></div>
-  <p>Luminosity</p>
-  <div id="tester4" style="width:90%;height:300px;"></div>
+  <div style="width: 100%; display: table;">
+    <div style="display: table-row">
+      <div style="width: 50%; display: table-cell;">
+        <h2>AI Lab - ODROID</h2>
+        <div>
+          <p>Temperature</p>
+          <div id="temp_plot1" style="width:100%;height:300px;"></div>
+          <p>Humidity</p>
+          <div id="hum_plot1" style="width:100%;height:300px;"></div>
+          <p>Pressure</p>
+          <div id="bar_plot1" style="width:100%;height:300px;"></div>
+          <p>Luminosity</p>
+          <div id="lux_plot1" style="width:100%;height:300px;"></div>
+        </div>
+      </div>
+      <div style="width: 50%; display: table-cell;">
+        <h2>Energy Lab - CORAL</h2>
+        <div>
+          <p>Temperature</p>
+          <div id="temp_plot2" style="width:100%;height:300px;"></div>
+          <p>Humidity</p>
+          <div id="hum_plot2" style="width:100%;height:300px;"></div>
+          <p>Pressure</p>
+          <div id="bar_plot2" style="width:100%;height:300px;"></div>
+          <p>Luminosity</p>
+          <div id="lux_plot2" style="width:100%;height:300px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <script>
     // TODO: Replace the following with your app's Firebase project configuration
     // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
@@ -35,8 +63,10 @@
   firebase.analytics();
 
   var database = firebase.database();
-  var starCountRef = firebase.database().ref('test/');
-  starCountRef.on('value', (snapshot) => {
+  var database_ref1 = firebase.database().ref('odroid_dmu/');
+  var database_ref2 = firebase.database().ref('coral_dmu/');
+
+  database_ref1.on('value', (snapshot) => {
     const data = snapshot.val();
     // console.log(data);
 
@@ -54,10 +84,10 @@
       yw.push(value['lux']);
     }
     console.log(xl);
-    TESTER = document.getElementById('tester');
-    TESTER2 = document.getElementById('tester2');
-    TESTER3 = document.getElementById('tester3');
-    TESTER4 = document.getElementById('tester4');
+    temp_plot1 = document.getElementById('temp_plot1');
+    hum_plot1 = document.getElementById('hum_plot1');
+    bar_plot1 = document.getElementById('bar_plot1');
+    lux_plot1 = document.getElementById('lux_plot1');
 
     var layout = {
         title: 'Time series with range slider and selectors',
@@ -67,7 +97,7 @@
         margin: { t: 0 } 
     };
 
-    Plotly.newPlot(TESTER, [{
+    Plotly.newPlot(temp_plot1, [{
     x: xl,
     y: yl,
     line: {
@@ -75,15 +105,15 @@
       width: 1
     } }], layout, {displaylogo: false, showSendToCloud: false});
 
-    Plotly.newPlot( TESTER2, [{
+    Plotly.newPlot(hum_plot1, [{
     x: xl,
     y: yc,
     line: {
-      color: 'rgb(33, 158, 188)',
+      color: 'rgb(95, 75, 102)',
       width: 1
     } }], layout, {displaylogo: false, showSendToCloud: false} );
 
-    Plotly.newPlot( TESTER3, [{
+    Plotly.newPlot(bar_plot1, [{
     x: xl,
     y: yz,
     line: {
@@ -91,7 +121,7 @@
       width: 1
     } }], layout, {displaylogo: false, showSendToCloud: false}  );
 
-    Plotly.newPlot( TESTER4, [{
+    Plotly.newPlot(lux_plot1, [{
     x: xl,
     y: yw,
     line: {
@@ -99,13 +129,68 @@
       width: 1
     } }], layout, {displaylogo: false, showSendToCloud: false} );
 });
-  </script>
-  
-  <script>
-    // TESTER = document.getElementById('tester');
-    // Plotly.newPlot( TESTER, [{
-    // x: [1, 2, 3, 4, 5],
-    // y: [1, 2, 4, 8, 16] }], {
-    // margin: { t: 0 } } );
+  database_ref2.on('value', (snapshot) => {
+    const data = snapshot.val();
+    // console.log(data);
+
+    let xl = []
+    let yl = []
+    let yc = []
+    let yz = []
+    let yw = []
+    for (const [key, value] of Object.entries(data)) {
+      // console.log(`${key}: ${value['temp']}`);
+      xl.push(new Date(key * 1000));
+      yl.push(value['temp']);
+      yc.push(value['hum']);
+      yz.push(value['bar']);
+      yw.push(value['lux']);
+    }
+    console.log(xl);
+    temp_plot2 = document.getElementById('temp_plot2');
+    hum_plot2 = document.getElementById('hum_plot2');
+    bar_plot2 = document.getElementById('bar_plot2');
+    lux_plot2 = document.getElementById('lux_plot2');
+
+    var layout = {
+        title: 'Time series with range slider and selectors',
+        xaxis: {
+            rangeslider: {}
+        },
+        margin: { t: 0 } 
+    };
+
+    Plotly.newPlot(temp_plot2, [{
+    x: xl,
+    y: yl,
+    line: {
+      color: 'rgb(142, 202, 230)',
+      width: 1
+    } }], layout, {displaylogo: false, showSendToCloud: false});
+
+    Plotly.newPlot(hum_plot2, [{
+    x: xl,
+    y: yc,
+    line: {
+      color: 'rgb(95, 75, 102)',
+      width: 1
+    } }], layout, {displaylogo: false, showSendToCloud: false} );
+
+    Plotly.newPlot(bar_plot2, [{
+    x: xl,
+    y: yz,
+    line: {
+      color: 'rgb(2, 48, 71)',
+      width: 1
+    } }], layout, {displaylogo: false, showSendToCloud: false}  );
+
+    Plotly.newPlot(lux_plot2, [{
+    x: xl,
+    y: yw,
+    line: {
+      color: 'rgb(255, 183, 3)',
+      width: 1
+    } }], layout, {displaylogo: false, showSendToCloud: false} );
+});
   </script>
 </html>
