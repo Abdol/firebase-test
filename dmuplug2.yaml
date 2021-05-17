@@ -1,6 +1,0 @@
-sensor:
-  platform: command_line
-  command: 'curl -u "P2621877@my365.dmu.ac.uk:Coll19pp" -X POST -H "Content-Type: application/json" -d "{\"id\": 300930}" https://mihome4u.co.uk/api/v1/subdevices/show'
-  name: DMU Plug 2
-  unit_of_measurement: w
-  value_template: '{{ value_json.data.last_data_instant }}'
