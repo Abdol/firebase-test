@@ -10,8 +10,8 @@ temp = 0.0
 hum = 0.0
 lux = 0.0
 bar = 0.0
-delay = 2
-path = "odroid"
+delay = 60
+path = "odroid_dmu"
 config = {
   "apiKey": "ck4RWASrUCpO3LZG1LivjeyVQWi8hn3d9YF0AtTM",
   "authDomain": "nergy-lab-1.firebaseapp.com",
@@ -19,11 +19,10 @@ config = {
   "storageBucket": "nergy-lab-1.appspot.com",
   "serviceAccount": "energy-lab-1-firebase-adminsdk-9inby-7e9f14c603.json"
 }
-port = '/dev/i2c-1'
 
 # WB
-si1132 = SI1132.SI1132(port)
-bme280 = BME280.BME280(port, 0x03, 0x02, 0x02, 0x02)
+si1132 = SI1132.SI1132(sys.argv[1])
+bme280 = BME280.BME280(sys.argv[1], 0x03, 0x02, 0x02, 0x02)
 def get_altitude(pressure, seaLevel):
     atmospheric = pressure / 100.0
     return 44330.0 * (1.0 - pow(atmospheric/seaLevel, 0.1903))
@@ -62,7 +61,7 @@ while 1:
     print(data)
     time_string = str(int(time.time()))
     db.child(path).child(time_string).set(data)
-
+    db.child(path).child('latest').set(data)
     # Retrieve database
     # data = db.child(path).get()
     # print(data.val())
