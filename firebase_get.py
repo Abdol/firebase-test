@@ -7,7 +7,7 @@ hum = 0.0
 lux = 0.0
 bar = 0.0
 delay = 2
-path = "test/latest"
+path = "odroid_dmu"
 config = {
   "apiKey": "ck4RWASrUCpO3LZG1LivjeyVQWi8hn3d9YF0AtTM",
   "authDomain": "nergy-lab-1.firebaseapp.com",
@@ -21,5 +21,5 @@ firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 
 # Retrieve database
-data = db.child(path).get()
+data = db.child(path).child('latest').get()
 print(json.dumps(data.val(), indent = 4))
