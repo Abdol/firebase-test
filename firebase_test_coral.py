@@ -16,7 +16,7 @@ temp = 0.0
 hum = 0.0
 lux = 0.0
 bar = 0.0
-delay = 4
+delay = 60
 path = "coral_dmu"
 config = {
   "apiKey": "ck4RWASrUCpO3LZG1LivjeyVQWi8hn3d9YF0AtTM",
@@ -43,11 +43,11 @@ def coral_display():
     msg = 'Temp: %.2f C\n' % _none_to_nan(temp)
     msg += 'RH: %.2f %%' % _none_to_nan(hum)
     update_display(enviro.display, msg)
-    sleep(delay / 2)
+    sleep(delay * 0.2)
     msg = 'Light: %.2f lux\n' % _none_to_nan(lux)
     msg += 'Pressure: %.2f kPa' % _none_to_nan(bar)
     update_display(enviro.display, msg)
-    sleep(delay / 2)
+    sleep(delay * 0.8)
 
 while 1:
     # Get data from sensors
@@ -67,6 +67,7 @@ while 1:
     print(data)
     time_string = str(int(time.time()))
     db.child(path).child(time_string).set(data)
+    db.child(path).child('latest').set(data)
     coral_display()
     # Retrieve database
     # data = db.child(path).get()
