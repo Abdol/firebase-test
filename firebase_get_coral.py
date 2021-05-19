@@ -8,7 +8,7 @@ config = {
   "authDomain": "nergy-lab-1.firebaseapp.com",
   "databaseURL": "https://energy-lab-1-default-rtdb.firebaseio.com",
   "storageBucket": "nergy-lab-1.appspot.com",
-  "serviceAccount": "energy-lab-1-firebase-adminsdk-9inby-7e9f14c603.json"
+  "serviceAccount": "./firebase-test/energy-lab-1-firebase-adminsdk-9inby-7e9f14c603.json"
 }
 
 # Connect to Firebase
