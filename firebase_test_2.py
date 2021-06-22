@@ -10,7 +10,7 @@ temp = 0.0
 hum = 0.0
 lux = 0.0
 bar = 0.0
-delay = 2
+delay = 60
 path = "odroid_ai_lab"
 config = {
   "apiKey": "ck4RWASrUCpO3LZG1LivjeyVQWi8hn3d9YF0AtTM",
