@@ -1,6 +1,5 @@
 #!/bin/bash
-ECHO "Starting shell script..."
-cd ~/firebase-test
+cd /home/odroid/firebase-test
 while true ; do
-    sudo python3.8 firebase_test_2_el.py
+   python3.8 /home/odroid/firebase-test/firebase_test_2_el.py
 done
